@@ -31,7 +31,7 @@ public class DebugNotificationActivity extends AppCompatActivity {
                 .setContentTitle("Normal notification")
                 .setContentText("This is the content text")
                 .setContentInfo("Content info")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_launcher_background)
                 .build();
         NotificationManager manager = getSystemService(NotificationManager.class);
 

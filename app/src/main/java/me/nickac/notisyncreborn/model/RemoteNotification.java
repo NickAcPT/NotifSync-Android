@@ -14,8 +14,10 @@ import me.nickac.notisyncreborn.utils.MiscUtils;
 
 public class RemoteNotification {
 
+    private final int color;
     private int id;
     private String appPackage;
+    private String appName;
     private long postTime;
     private long when;
     private RemoteAction[] actions;
@@ -27,6 +29,8 @@ public class RemoteNotification {
     private RemoteNotification(StatusBarNotification sbn) {
         id = sbn.getId();
         appPackage = sbn.getPackageName();
+        appName = MiscUtils.getNameForPackage(appPackage);
+        color = sbn.getNotification().color;
         postTime = sbn.getPostTime();
         when = sbn.getNotification().when;
         if (sbn.getNotification().actions != null)
@@ -48,6 +52,14 @@ public class RemoteNotification {
 
     public static RemoteNotification fromNotification(StatusBarNotification sbn) {
         return new RemoteNotification(sbn);
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public int getColor() {
+        return color;
     }
 
     public RemoteMessageInfo getMessageInfo() {
