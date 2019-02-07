@@ -24,7 +24,7 @@ public class NotificationSyncUtils {
 
     public NotificationSyncUtils() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:11785")
+                .baseUrl("http://192.168.1.14:11785")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         restNotificationService = retrofit.create(RestNotificationService.class);
@@ -49,6 +49,22 @@ public class NotificationSyncUtils {
         Call<ResponseBody> call = restNotificationService
                 .sendNotificationRaw(RetrofitUtils.createPartFromString(json),
                         prepareBitmaps(typeAdapter.getImages()));
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+    public void removeNotification(int id, String appPackage) {
+        Call<ResponseBody> call = restNotificationService
+                .removeNotificationRaw(id, appPackage);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -38,6 +38,23 @@ public class DebugNotificationActivity extends AppCompatActivity {
         manager.notify(1, notif);
     }
 
+    public void sendLongNotification(View view) {
+        Notification notif = new NotificationCompat.Builder(this, "test-notif")
+                .setContentTitle("Normal notification")
+                .setContentText(
+                        "Bacon ipsum dolor amet meatball tenderloin swine, filet mignon biltong fatback turkey." +
+                                "Salami frankfurter pork chop beef ribs, kevin beef bresaola sausage picanha ground round." +
+                                "Ball tip pork loin sirloin tri-tip, jerky strip steak biltong picanha boudin short ribs andouille fatback kevin shankle." +
+                                "Turducken pork burgdoggen, shank pig jowl frankfurter pork loin sausage rump turkey ground round bresaola prosciutto pancetta." +
+                                "Bresaola bacon tongue, capicola buffalo drumstick tenderloin.")
+                .setContentInfo("Content info")
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .build();
+        NotificationManager manager = getSystemService(NotificationManager.class);
+
+        manager.notify(1, notif);
+    }
+
     public void sendMediaNotification(View view) {
         Notification notif = new NotificationCompat.Builder(this, "test-notif")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)

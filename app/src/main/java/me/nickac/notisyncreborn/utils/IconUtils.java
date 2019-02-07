@@ -11,10 +11,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import android.text.TextUtils;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -80,7 +81,8 @@ public class IconUtils {
             return null;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                if (ico.getType() == Icon.TYPE_BITMAP || ico.getType() == Icon.TYPE_ADAPTIVE_BITMAP) {
+                if (ico.getType() == Icon.TYPE_BITMAP || ico
+                        .getType() == Icon.TYPE_ADAPTIVE_BITMAP) {
                     try {
                         return (Bitmap) MethodUtils.invokeExactMethod(ico, "getBitmap");
                     } catch (NoSuchMethodException e) {
@@ -137,12 +139,19 @@ public class IconUtils {
             return ((BitmapDrawable) drawable).getBitmap();
         }
 
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
+        try {
 
-        return bitmap;
+            Bitmap bitmap = Bitmap
+                    .createBitmap(Math.max(drawable.getIntrinsicWidth(), 10), Math.max(drawable.getIntrinsicHeight(), 10),
+                            Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Nullable

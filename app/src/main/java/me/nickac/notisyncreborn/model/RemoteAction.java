@@ -110,4 +110,9 @@ public class RemoteAction {
     }
 
 
+    @Override
+    protected void finalize() throws Throwable {
+        if (icon != null)
+            icon.recycle();
+    }
 }

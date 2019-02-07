@@ -20,6 +20,12 @@ public class NotificationBroadcastReceiver extends NotificationListenerService {
     }
 
     @Override
+    public void onNotificationRemoved(StatusBarNotification sbn) {
+        SyncApplication.getApplication().getSyncUtils().removeNotification(sbn.getId(), sbn.getPackageName());
+        super.onNotificationRemoved(sbn);
+    }
+
+    @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         RemoteNotification src = RemoteNotification.fromNotification(sbn);
         d("NotifSync", SyncApplication.getGson().toJson(src));

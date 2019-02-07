@@ -39,6 +39,12 @@ public class RemotePerson {
         return new RemotePerson(MiscUtils.toAndroidPerson(person));
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        if (icon != null)
+            icon.recycle();
+    }
+
     public String getKey() {
         return key;
     }

@@ -25,12 +25,16 @@ public class RemoteNotification {
     private Bitmap largeIcon;
     private Map<String, Object> extras;
     private RemoteMessageInfo messageInfo;
+    private boolean ongoing;
+    private boolean clearable;
 
     private RemoteNotification(StatusBarNotification sbn) {
         id = sbn.getId();
         appPackage = sbn.getPackageName();
         appName = MiscUtils.getNameForPackage(appPackage);
         color = sbn.getNotification().color;
+        ongoing = sbn.isOngoing();
+        clearable = sbn.isOngoing();
         postTime = sbn.getPostTime();
         when = sbn.getNotification().when;
         if (sbn.getNotification().actions != null)
@@ -52,6 +56,14 @@ public class RemoteNotification {
 
     public static RemoteNotification fromNotification(StatusBarNotification sbn) {
         return new RemoteNotification(sbn);
+    }
+
+    public boolean isOngoing() {
+        return ongoing;
+    }
+
+    public boolean isClearable() {
+        return clearable;
     }
 
     public String getAppName() {
@@ -96,5 +108,13 @@ public class RemoteNotification {
 
     public Map<String, Object> getExtras() {
         return extras;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        if (smallIcon != null)
+            smallIcon.recycle();
+        if (largeIcon != null)
+            largeIcon.recycle();
     }
 }
