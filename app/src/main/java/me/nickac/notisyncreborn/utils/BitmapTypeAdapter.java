@@ -1,4 +1,4 @@
-package me.nickac.notifsync.utils;
+package me.nickac.notisyncreborn.utils;
 
 import android.graphics.Bitmap;
 

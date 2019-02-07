@@ -9,6 +9,7 @@ import com.gilecode.yagson.types.TypeInfoPolicy;
 import java.lang.reflect.Modifier;
 
 import me.nickac.notisyncreborn.model.RemoteNotification;
+import me.nickac.notisyncreborn.utils.BitmapTypeAdapter;
 import me.nickac.notisyncreborn.utils.RetrofitUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -24,7 +25,8 @@ public class NotificationSyncUtils {
 
     public NotificationSyncUtils() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.14:11785")
+                .baseUrl("http://10.0.2.2:11785")
+                //.baseUrl("http://192.168.1.14:11785")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         restNotificationService = retrofit.create(RestNotificationService.class);
@@ -38,7 +40,7 @@ public class NotificationSyncUtils {
 
 
     public void sendNotification(RemoteNotification notif) {
-        me.nickac.notifsync.utils.BitmapTypeAdapter typeAdapter = new me.nickac.notifsync.utils.BitmapTypeAdapter();
+        BitmapTypeAdapter typeAdapter = new BitmapTypeAdapter();
         YaGson yaGson = getYaGsonBuilder()
                 .registerTypeAdapter(Bitmap.class, typeAdapter)
                 .create();
