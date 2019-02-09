@@ -35,4 +35,5 @@ dependencies {
     implementation 'com.github.amogilev.yagson:yagson:3970e83ca7'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.sparkjava:spark-core:2.3'
 }

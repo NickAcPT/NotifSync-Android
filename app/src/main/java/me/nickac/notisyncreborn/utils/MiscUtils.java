@@ -4,7 +4,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.Person;
 
@@ -46,9 +45,10 @@ public class MiscUtils {
     /**
      * Converts this compat {@link Person} to the base Android framework {@link android.app.Person}.
      */
-    @NonNull
     @RequiresApi(28)
     public static android.app.Person toAndroidPerson(Person person) {
+        if (person == null)
+            return null;
         return new android.app.Person.Builder()
                 .setName(person.getName())
                 .setIcon((person.getIcon() != null) ? person.getIcon().toIcon() : null)

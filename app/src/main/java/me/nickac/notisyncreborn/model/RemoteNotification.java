@@ -27,14 +27,16 @@ public class RemoteNotification {
     private RemoteMessageInfo messageInfo;
     private boolean ongoing;
     private boolean clearable;
+    private transient StatusBarNotification nativeNotification;
 
     private RemoteNotification(StatusBarNotification sbn) {
+        nativeNotification = sbn;
         id = sbn.getId();
         appPackage = sbn.getPackageName();
         appName = MiscUtils.getNameForPackage(appPackage);
         color = sbn.getNotification().color;
         ongoing = sbn.isOngoing();
-        clearable = sbn.isOngoing();
+        clearable = sbn.isClearable();
         postTime = sbn.getPostTime();
         when = sbn.getNotification().when;
         if (sbn.getNotification().actions != null)
@@ -56,6 +58,10 @@ public class RemoteNotification {
 
     public static RemoteNotification fromNotification(StatusBarNotification sbn) {
         return new RemoteNotification(sbn);
+    }
+
+    public StatusBarNotification getNativeNotification() {
+        return nativeNotification;
     }
 
     public boolean isOngoing() {

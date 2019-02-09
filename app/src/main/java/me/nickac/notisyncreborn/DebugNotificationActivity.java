@@ -139,6 +139,14 @@ public class DebugNotificationActivity extends AppCompatActivity {
         }
     }
 
+    public void startServer(View view) {
+        SyncApplication.getApplication().getNotificationServer().start();
+    }
+
+    public void stopServer(View view) {
+        SyncApplication.getApplication().getNotificationServer().stop();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,10 +4,8 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v4.media.session.MediaSessionCompat;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.Person;
 
 import com.gilecode.yagson.YaGson;
@@ -15,24 +13,10 @@ import com.gilecode.yagson.YaGsonBuilder;
 import com.gilecode.yagson.types.TypeInfoPolicy;
 
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
-import me.nickac.notifsync.utils.BitmapTypeAdapter;
-import me.nickac.notisyncreborn.model.RemoteAction;
-import me.nickac.notisyncreborn.model.RemoteNotification;
 import me.nickac.notisyncreborn.networking.NotificationSyncUtils;
 import me.nickac.notisyncreborn.networking.RestNotificationService;
-import me.nickac.notisyncreborn.utils.RetrofitUtils;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import static me.nickac.notisyncreborn.utils.RetrofitUtils.prepareBitmaps;
+import me.nickac.notisyncreborn.networking.server.NotificationServer;
 
 public class SyncApplication extends Application {
     private static YaGson gson;
@@ -44,6 +28,7 @@ public class SyncApplication extends Application {
             .setBot(true)
             .build();
     private MediaSessionCompat mediaSessionCompat;
+    private NotificationServer notificationServer;
     private RestNotificationService restNotificationService;
     private NotificationSyncUtils syncUtils;
 
@@ -53,6 +38,14 @@ public class SyncApplication extends Application {
 
     public static Context getContext() {
         return getApplication().getApplicationContext();
+    }
+
+    public static YaGson getGson() {
+        return gson;
+    }
+
+    public NotificationServer getNotificationServer() {
+        return notificationServer;
     }
 
     public MediaSessionCompat getMediaSessionCompat() {
@@ -66,13 +59,9 @@ public class SyncApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        notificationServer.stop();
         sApplication = null;
     }
-
-    public static YaGson getGson() {
-        return gson;
-    }
-
 
     private YaGsonBuilder getYaGsonBuilder() {
         return new YaGsonBuilder()
@@ -92,6 +81,8 @@ public class SyncApplication extends Application {
                 .create();
         mediaSessionCompat = new MediaSessionCompat(getApplicationContext(), "NOTISYNC");
         sApplication = this;
+        notificationServer = new NotificationServer();
+        notificationServer.start();
     }
 
     public void setupNotificationChannels() {
