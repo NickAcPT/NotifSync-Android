@@ -31,7 +31,6 @@ public class RetrofitUtils {
                 RequestBody.create(
                         MediaType.parse("image/png"),
                         contents
-
                 );
 
         // MultipartBody.Part is used to send also the actual file name
@@ -39,10 +38,13 @@ public class RetrofitUtils {
     }
 
     private static byte[] bitmapToByteArray(Bitmap bmp) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream.toByteArray();
+        } catch (IllegalStateException e) {
+            return new byte[0];
+        }
     }
 
     @NonNull

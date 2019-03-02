@@ -9,13 +9,15 @@ import me.nickac.notisyncreborn.utils.IconUtils;
 import me.nickac.notisyncreborn.utils.MiscUtils;
 
 public class RemotePerson {
-
+    private static final androidx.core.app.Person you = new androidx.core.app.Person.Builder()
+            .setName("You")
+            .setKey("you")
+            .build();
     private String key;
     private String name;
     private Bitmap icon;
     private boolean important;
     private boolean isBot;
-
     private RemotePerson(Person person) {
         key = person.getKey();
         if (person.getName() != null) {
@@ -29,6 +31,10 @@ public class RemotePerson {
         }
         important = person.isImportant();
         isBot = person.isBot();
+    }
+
+    static androidx.core.app.Person getYou() {
+        return you;
     }
 
     public static RemotePerson fromPerson(Person person) {

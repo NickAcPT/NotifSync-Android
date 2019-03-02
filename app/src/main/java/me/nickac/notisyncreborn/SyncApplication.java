@@ -17,6 +17,7 @@ import java.lang.reflect.Modifier;
 import me.nickac.notisyncreborn.networking.NotificationSyncUtils;
 import me.nickac.notisyncreborn.networking.RestNotificationService;
 import me.nickac.notisyncreborn.networking.server.NotificationServer;
+import me.nickac.notisyncreborn.utils.PostConstructAdapterFactory;
 
 public class SyncApplication extends Application {
     private static YaGson gson;
@@ -66,7 +67,8 @@ public class SyncApplication extends Application {
     private YaGsonBuilder getYaGsonBuilder() {
         return new YaGsonBuilder()
                 .excludeFieldsWithModifiers(Modifier.TRANSIENT)
-                .setTypeInfoPolicy(TypeInfoPolicy.DISABLED);
+                .setTypeInfoPolicy(TypeInfoPolicy.DISABLED)
+                .registerTypeAdapterFactory(new PostConstructAdapterFactory());
     }
 
     public NotificationSyncUtils getSyncUtils() {

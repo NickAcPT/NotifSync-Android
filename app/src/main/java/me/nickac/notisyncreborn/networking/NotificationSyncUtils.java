@@ -8,28 +8,21 @@ import com.gilecode.yagson.types.TypeInfoPolicy;
 
 import java.lang.reflect.Modifier;
 
+import me.nickac.notisyncreborn.model.RemoteDevice;
 import me.nickac.notisyncreborn.model.RemoteNotification;
+import me.nickac.notisyncreborn.storage.DeviceStorage;
 import me.nickac.notisyncreborn.utils.BitmapTypeAdapter;
 import me.nickac.notisyncreborn.utils.RetrofitUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static me.nickac.notisyncreborn.utils.RetrofitUtils.prepareBitmaps;
 
 public class NotificationSyncUtils {
-    private final RestNotificationService restNotificationService;
 
     public NotificationSyncUtils() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:11785")
-                //.baseUrl("http://192.168.1.14:11785")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        restNotificationService = retrofit.create(RestNotificationService.class);
     }
 
     private YaGsonBuilder getYaGsonBuilder() {
@@ -44,44 +37,45 @@ public class NotificationSyncUtils {
         YaGson yaGson = getYaGsonBuilder()
                 .registerTypeAdapter(Bitmap.class, typeAdapter)
                 .create();
-
         String json = yaGson.toJson(notif);
 
+        for (RemoteDevice device : DeviceStorage.getInstance().getDevices()) {
+            Call<ResponseBody> call = device.getNotificationService()
+                    .sendNotificationRaw(RetrofitUtils.createPartFromString(json),
+                            prepareBitmaps(typeAdapter.getImages()));
 
-        Call<ResponseBody> call = restNotificationService
-                .sendNotificationRaw(RetrofitUtils.createPartFromString(json),
-                        prepareBitmaps(typeAdapter.getImages()));
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                }
 
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    //TODO: Handle this and warn the user
+                }
+            });
+        }
     }
+
     public void removeNotification(int id, String appPackage) {
-        Call<ResponseBody> call = restNotificationService
-                .removeNotificationRaw(id, appPackage);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+        for (RemoteDevice device : DeviceStorage.getInstance().getDevices()) {
+            Call<ResponseBody> call = device.getNotificationService()
+                    .removeNotificationRaw(id, appPackage);
 
-            }
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                }
 
-            }
-        });
-    }
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-    public RestNotificationService getRestNotificationService() {
-        return restNotificationService;
+                }
+            });
+
+        }
     }
 }

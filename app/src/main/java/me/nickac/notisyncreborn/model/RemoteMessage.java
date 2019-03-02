@@ -16,7 +16,7 @@ public class RemoteMessage {
     private Map<String, Object> extras;
 
     private RemoteMessage(NotificationCompat.MessagingStyle.Message message) {
-        person = RemotePerson.fromCompatPerson(message.getPerson());
+        person = RemotePerson.fromCompatPerson(message.getPerson() == null ? RemotePerson.getYou() : message.getPerson());
         extras = MiscUtils.bundleToMap(message.getExtras());
         text = message.getText().toString();
         timestamp = message.getTimestamp();
